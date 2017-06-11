@@ -146,14 +146,14 @@ describe('Raw moves test', () => {
     })
 });
 
-describe('Legal squares test', () => {
-    it('Ba1 legal squares', (done) => {
+describe('Legal moves test', () => {
+    it('Ba1 legal moves', (done) => {
         seneca.error(done);
 
         var Ba1 = new ChessPiece('Ba1');
         seneca.act({
             role: "movement",
-            cmd: "legalSquares",
+            cmd: "legalMoves",
             piece: Ba1
         }, (err, msg) => {
             expect(err)
@@ -179,13 +179,13 @@ describe('Legal squares test', () => {
         });
     });
 
-    it('Rd4 legal squares', (done) => {
+    it('Rd4 legal moves', (done) => {
         seneca.error(done);
 
         var p = new ChessPiece('Rd4');
         seneca.act({
             role: "movement",
-            cmd: "legalSquares",
+            cmd: "legalMoves",
             piece: p
         }, (err, msg) => {
             // console.log("Rd4", {
