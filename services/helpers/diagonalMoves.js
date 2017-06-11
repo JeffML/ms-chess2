@@ -1,4 +1,14 @@
-module.exports = function diagonal(position, range = 7) {
+module.exports = function diagonal() {
+    this.add({
+        role: "movement",
+        cmd: "diagonalMoves"
+    }, (msg, reply) => {
+        const result = diagonalImpl(msg.position, msg.range || 7, msg.asVector)
+        reply(null, result)
+    })
+}
+
+function diagonalImpl(position, range, asVectors) {
     var vectors = [[], [], [], []];
     const cFile = position.file.charCodeAt()
     const cRank = position.rank.charCodeAt();
@@ -20,6 +30,10 @@ module.exports = function diagonal(position, range = 7) {
             file: String.fromCharCode(cFile + i),
             rank: String.fromCharCode(cRank - i)
         });
+    }
+
+    if (asVectors) {
+        return vectors;
     }
 
     const moves = Array.prototype.concat(...vectors)

@@ -188,9 +188,9 @@ describe('Legal squares test', () => {
             cmd: "legalSquares",
             piece: p
         }, (err, msg) => {
-            console.log("Rd4", {
-                msg
-            })
+            // console.log("Rd4", {
+            //     msg
+            // })
             expect(err)
                 .to.be.null;
             expect(msg)

@@ -1,16 +1,15 @@
 const rankAndFileMoves = require("./helpers/rankAndFileMoves")
-const diagonal = require("./helpers/diagonalMoves")
+const diagonalMoves = require("./helpers/diagonalMoves")
 
 module.exports = function movement() {
-    this.use(rankAndFileMoves);
+    this.use(rankAndFileMoves)
+    this.use(diagonalMoves)
 
     this.add({
         role: "movement",
         cmd: "rawMoves",
     }, (msg, reply) => {
         var err = null;
-        var rawMoves = [];
-
         var pos = msg.piece.position;
 
         switch (msg.piece.piece) {
@@ -22,15 +21,25 @@ module.exports = function movement() {
             }, reply);
             return;
         case 'B':
-            rawMoves = diagonal(pos);
-            break;
+            this.act({
+                role: "movement",
+                cmd: "diagonalMoves",
+                position: pos
+            }, reply);
+            return;
         case 'Q':
             this.act({
                 role: "movement",
                 cmd: "rankAndFileMoves",
                 position: pos
             }, (err, results) => {
-                reply(results.concat(diagonal(pos)))
+                this.act({
+                    role: "movement",
+                    cmd: "diagonalMoves",
+                    position: pos
+                }, (err, results2) => {
+                    reply(null, results.concat(results2));
+                });
             });
             return;
         case 'K':
@@ -40,7 +49,14 @@ module.exports = function movement() {
                 position: pos,
                 range: 1
             }, (err, results) => {
-                reply(results.concat(diagonal(pos, 1)))
+                this.act({
+                    role: "movement",
+                    cmd: "diagonalMoves",
+                    position: pos,
+                    range: 1
+                }, (err, results2) => {
+                    reply(null, results.concat(results2));
+                });
             });
             return;
         default:
@@ -48,7 +64,7 @@ module.exports = function movement() {
             break;
         };
 
-        reply(err, rawMoves);
+        reply(err);
     });
 
     this.add({

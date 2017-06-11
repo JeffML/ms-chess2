@@ -3,12 +3,12 @@ module.exports = function rankAndFile() {
         role: "movement",
         cmd: "rankAndFileMoves"
     }, (msg, reply) => {
-        var result = rankAndFileImpl(msg.position, msg.range || 7, msg.asVectors)
+        const result = rankAndFileImpl(msg.position, msg.range || 7, msg.asVectors)
         reply(null, result);
     })
 }
 
-function rankAndFileImpl(position, range = 7) {
+function rankAndFileImpl(position, range, asVectors) {
     var vectors = [[], [], [], []];
 
     const cFile = position.file.charCodeAt()
@@ -32,6 +32,11 @@ function rankAndFileImpl(position, range = 7) {
             rank: String.fromCharCode(cRank - i)
         });
     }
+
+    if (asVectors) {
+        return vectors;
+    }
+
     const moves = Array.prototype.concat(...vectors);
     return moves;
 }
