@@ -1,4 +1,14 @@
-module.exports = function rankAndFile(position, range = 7) {
+module.exports = function rankAndFile() {
+    this.add({
+        role: "movement",
+        cmd: "rankAndFileMoves"
+    }, (msg, reply) => {
+        var result = rankAndFileImpl(msg.position, msg.range || 7, msg.asVectors)
+        reply(null, result);
+    })
+}
+
+function rankAndFileImpl(position, range = 7) {
     var vectors = [[], [], [], []];
 
     const cFile = position.file.charCodeAt()

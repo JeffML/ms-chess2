@@ -1,7 +1,8 @@
-const rankAndFile = require("./helpers/rankAndFileMoves")
+const rankAndFileMoves = require("./helpers/rankAndFileMoves")
 const diagonal = require("./helpers/diagonalMoves")
 
 module.exports = function movement() {
+    this.use(rankAndFileMoves);
 
     this.add({
         role: "movement",
@@ -14,19 +15,34 @@ module.exports = function movement() {
 
         switch (msg.piece.piece) {
         case 'R':
-            rawMoves = rankAndFile(pos);
-            break;
+            this.act({
+                role: "movement",
+                cmd: "rankAndFileMoves",
+                position: pos
+            }, reply);
+            return;
         case 'B':
             rawMoves = diagonal(pos);
             break;
         case 'Q':
-            rawMoves = rankAndFile(pos)
-                .concat(diagonal(pos));
-            break;
+            this.act({
+                role: "movement",
+                cmd: "rankAndFileMoves",
+                position: pos
+            }, (err, results) => {
+                reply(results.concat(diagonal(pos)))
+            });
+            return;
         case 'K':
-            rawMoves = rankAndFile(pos, 1)
-                .concat(diagonal(pos, 1))
-            break;
+            this.act({
+                role: "movement",
+                cmd: "rankAndFileMoves",
+                position: pos,
+                range: 1
+            }, (err, results) => {
+                reply(results.concat(diagonal(pos, 1)))
+            });
+            return;
         default:
             err = "unhandled " + msg.piece;
             break;
