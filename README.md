@@ -1,2 +1,3 @@
 # ms-chess
-a microservice-based chess engine
+a microservice-based chess engine, Part II
+
